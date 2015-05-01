@@ -28,11 +28,21 @@ class Player(pygame.sprite.Sprite):
         self.v = Vector(0, 0)
         self.a = Vector(0, 0)
 
+    def rot_center(self, image, angle):
+        """rotate an image while keeping its center and size"""
+        orig_rect = image.get_rect()
+        rot_image = pygame.transform.rotate(image, angle)
+        rot_rect = orig_rect.copy()
+        rot_rect.center = rot_image.get_rect().center
+        rot_image = rot_image.subsurface(rot_rect).copy()
+        return rot_image
+        
+
     def update(self):
         if self.a.x != 0 or self.a.y != 0:
-            self.image = pygame.transform.rotate(self.image_original_m, self.v.get_angle()+180)
+            self.image = self.rot_center(self.image_original_m, self.v.get_angle()+180)
         else:
-            self.image = pygame.transform.rotate(self.image_original_s, self.v.get_angle()+180)
+            self.image = self.rot_center(self.image_original_s, self.v.get_angle()+180)
 
         self.v.x += self.a.x
         self.v.y += self.a.y

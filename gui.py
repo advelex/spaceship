@@ -8,9 +8,22 @@ class Vector:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.r = self.get_r()
+        self.fii = self.get_angle()
 
     def get_angle(self):
         return math.degrees(math.atan2(self.x, self.y))
+
+    def get_r(self):
+        return math.hypot(self.x, self.y)
+
+    def update_polar(self):
+        self.r = self.get_r()
+        self.fii = self.get_angle()
+
+    def update_cartesian(self):
+        self.x = self.r * math.cos(math.radians(fii))
+        self.y = self.r * math.sin(math.radians(fii))
 
 class Player(pygame.sprite.Sprite):
     

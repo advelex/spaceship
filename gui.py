@@ -1,6 +1,7 @@
 import math
 import pygame
 import pdb
+import time
 
 
 class Vector:
@@ -28,6 +29,8 @@ class Player(pygame.sprite.Sprite):
         self.v = Vector(0, 0)
         self.a = Vector(0, 0)
 
+        self.last_time = time.perf_counter()
+
     def rot_center(self, image, angle):
         """rotate an image while keeping its center and size"""
         orig_rect = image.get_rect()
@@ -44,10 +47,15 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = self.rot_center(self.image_original_s, self.v.get_angle()+180)
 
-        self.v.x += self.a.x
-        self.v.y += self.a.y
-        self.rect.x += self.v.x
-        self.rect.y += self.v.y
+        current_time = time.perf_counter()
+        delta_time = (current_time-self.last_time) * 100
+        self.last_time = current_time
+        
+
+        self.v.x += self.a.x*delta_time
+        self.v.y += self.a.y*delta_time
+        self.rect.x += self.v.x*delta_time
+        self.rect.y += self.v.y*delta_time
 
         if self.rect.x > Gui.WINDOW_SIZE[0]:
             self.rect.x = -1
@@ -76,7 +84,7 @@ class Gui:
         pygame.display.set_caption('Spaceship Simulation')
 
         self.ship = Player()
-        self.a = 0.2
+        self.a = 0.1
         self.fps = 60
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.ship)

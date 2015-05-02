@@ -24,22 +24,22 @@ class EventManager(object):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     if not self.key_up:
-                        self.player.a.y -= self.player.acceleration
+                        self.player.a.r += self.player.acceleration
                         self.key_up = True
 
                 if event.key == pygame.K_DOWN:
                     if not self.key_down:
-                        self.player.a.y += self.player.acceleration
+                        self.player.a.r -= self.player.acceleration
                         self.key_down = True
 
                 if event.key == pygame.K_LEFT:
                     if not self.key_left:
-                        self.player.a.x -= self.player.acceleration
+                        self.player.w += self.player.delta_angle
                         self.key_left = True
 
                 if event.key == pygame.K_RIGHT:
                     if not self.key_right:
-                        self.player.a.x += self.player.acceleration
+                        self.player.w -= self.player.delta_angle
                         self.key_right = True
 
                 if event.key == pygame.K_q:
@@ -48,21 +48,21 @@ class EventManager(object):
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     if self.key_up:
-                        self.player.a.y += self.player.acceleration
+                        self.player.a.r -= self.player.acceleration
                         self.key_up = False
 
                 if event.key == pygame.K_DOWN:
                     if self.key_down:
-                        self.player.a.y -= self.player.acceleration
+                        self.player.a.r += self.player.acceleration
                         self.key_down = False
 
                 if event.key == pygame.K_LEFT:
                     if self.key_left:
-                        self.player.a.x += self.player.acceleration
+                        self.player.w -= self.player.delta_angle
                         self.key_left = False
 
                 if event.key == pygame.K_RIGHT:
                     if self.key_right:
-                        self.player.a.x -= self.player.acceleration
+                        self.player.w += self.player.delta_angle
                         self.key_right = False
         return True

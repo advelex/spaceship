@@ -43,8 +43,6 @@ class Vector2( object ):
                 
                 
         def Normalize( self ):
-                if ( self.x == 0 or self.y == 0 ):
-                        return Vector2( 0, 0 )
                 
                 return Vector2( self.x, self.y ) * ( 1.0 / self.Magnitude() )
                 
@@ -69,6 +67,10 @@ class Vector2( object ):
                 mag = self.Magnitude()
                 
                 if ( mag > max_magnitude ):
+                        # print( "mag:{}." .format( mag ) )
+                        # print( "max_magnitude:{}." .format( max_magnitude ) )
+                        # print( "old vector:{}." .format( self ) )
+                        # print( "new vector:{}." .format( self.Normalize() * max_magnitude ) )
                         return self.Normalize() * max_magnitude
                         
                 return self

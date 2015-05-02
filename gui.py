@@ -2,6 +2,7 @@ import math
 import pygame
 import pdb
 import time
+import pathlib
 
 
 class Vector:
@@ -17,9 +18,11 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
-        self.image_original_m = pygame.image.load("ship_m.png").convert()
+        m_img_path = pathlib.Path('ship_m.png').resolve()
+        s_img_path = pathlib.Path('ship_s.png').resolve()
+        self.image_original_m = pygame.image.load(str(m_img_path)).convert()
         self.image_original_m.set_colorkey(Gui.BLACK)
-        self.image_original_s = pygame.image.load("ship_s.png").convert()
+        self.image_original_s = pygame.image.load(str(s_img_path)).convert()
         self.image_original_s.set_colorkey(Gui.BLACK)
         self.image = self.image_original_s
         self.rect = self.image.get_rect()

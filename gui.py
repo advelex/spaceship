@@ -98,6 +98,9 @@ class Gui:
                 if event.key == pygame.K_RIGHT:
                     self.ship.a.x = self.a
 
+                if event.key == pygame.K_q:
+                    return False
+
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     self.ship.a.y = 0

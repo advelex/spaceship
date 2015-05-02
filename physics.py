@@ -53,15 +53,17 @@ class PhysicsComponent():
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
         # else:
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
+        
+        max_velocity = 14.0
+        
+        speed = self.speed + ( self.acceleration * delta_time )
+        self.speed = speed.ClampMagnitude( max_velocity )
+        
+        self.location = self.location + ( self.speed * delta_time )
             
         angle = self.speed.GetAngle() + 180
         self.graphics_component.RotateCenter( angle )
         
-        
-        self.speed = self.speed + ( self.acceleration * delta_time )
-        
-        self.location = self.location + ( self.speed * delta_time )
-
         
         if self.location.x > window.Window.size[0]:
             self.location.x = 0

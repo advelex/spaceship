@@ -136,7 +136,7 @@ class Gui:
         self.window_size = [ 1000, 750 ]
         self.window = window.Window( self.window_size )
 
-        acceleration_factor = 1.0
+        acceleration_factor = 0.5
         self.ship = Player( acceleration_factor )
         
         self.fps = 60
@@ -160,7 +160,7 @@ class Gui:
             
             self.window.RenderAll()
             
-            #self.clock.tick( self.fps )
+            #self.clock.tick( 60*1000 )
 
         pygame.quit()
 

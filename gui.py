@@ -8,35 +8,16 @@ import os, pathlib
 from sys import platform as _platform
 from vector2 import Vector2
 
-'''
-class Vector:
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def get_angle(self):
-        return math.degrees(math.atan2(self.x, self.y))
-'''
-
-
 class Player(pygame.sprite.Sprite):
-    
-    '''
-    Playerin initti ottaa parametrin acceleration, jota vastasi aiemman toteutuksen Gui.a, 
-    mikä oli 0.1
-    
-    Täällä myös luodaan playerille oma EventManager instanssi, joka vastaa aiempaa
-    Gui luokan event_manager metodia.
-    '''
+
     def __init__( self, acceleration ):
+
         super().__init__()
         
-        '''
-        TODO::
-        Tähän voisi tehdä if-else kohdan, mikä hakis oikean polun riippuen siitä, 
-        että mikä käyttöjärjestelmä on.
-        '''
+        # TODO::
+        # Tähän voisi tehdä if-else kohdan, mikä hakis oikean polun riippuen siitä, 
+        # että mikä käyttöjärjestelmä on.
+        
         m_img_path = ""
         s_img_path = ""
         
@@ -79,10 +60,8 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         if self.a.x != 0 or self.a.y != 0:
-            #self.image = self.rot_center(self.image_original_m, self.v.get_angle()+180)
             self.image = self.rot_center( self.image_original_m, self.v.GetAngle()+180 )
         else:
-            #self.image = self.rot_center(self.image_original_s, self.v.get_angle()+180)
             self.image = self.rot_center( self.image_original_s, self.v.GetAngle()+180 )
 
         current_time = time.perf_counter()
@@ -90,10 +69,6 @@ class Player(pygame.sprite.Sprite):
         self.last_time = current_time
         
         self.v = self.v + self.a * delta_time
-        '''
-        self.v.x += self.a.x*delta_time
-        self.v.y += self.a.y*delta_time
-        '''
         self.rect.x += self.v.x*delta_time
         self.rect.y += self.v.y*delta_time
 
@@ -107,7 +82,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.y = Gui.WINDOW_SIZE[1]
 
 
-
 class Gui:
 
     WINDOW_SIZE = [800, 600]
@@ -117,10 +91,6 @@ class Gui:
     WHITE = (255, 255, 255)
     RED = (255, 0 ,0)
     
-    '''
-    Aiemmin täällä oli muuttuja self.ai, nyt se on korvattu acceleration
-    nimisellä muuttujalla, joka annetaan playerille parametrinä.
-    '''
     def __init__(self):
 
         pygame.init()

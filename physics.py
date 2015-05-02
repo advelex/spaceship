@@ -7,23 +7,18 @@ import os, pathlib
 import window
 import animations
 
-#Tällä saadaan tietää mikä käyttöjärjestelmä on tällä hetkellä.
 from sys import platform as _platform
 
 from vector2 import Vector2
 
 
 class PhysicsComponent():
-
     
-    def __init__( self, location_vector = None, acceleration_factor = 1.0 ):
+    def __init__( self, location_vector, acceleration_factor = 1.0 ):
     
         self.graphics_component = None
         
         self.location = location_vector
-        
-        if ( location_vector == None ):
-            self.location = Vector2( 150, 150 )
         
         self.speed = Vector2(0, 0)
         self.acceleration = Vector2(0, 0)
@@ -49,8 +44,7 @@ class PhysicsComponent():
         w = 30
         h = 30
         
-        rect = pygame.Rect( x, y, w, h )
-        return rect
+        return pygame.Rect( x, y, w, h )
         
 
     def Update( self, delta_time ):
@@ -59,20 +53,26 @@ class PhysicsComponent():
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
         # else:
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
+            
+        angle = self.speed.GetAngle() + 180
+        self.graphics_component.RotateCenter( angle )
         
-        self.graphics_component.RotateCenter( self.speed.GetAngle() + 180 )
         
-        self.speed = self.speed + self.acceleration * delta_time
+        self.speed = self.speed + ( self.acceleration * delta_time )
         
-        self.location = self.location + self.speed * delta_time
+        self.location = self.location + ( self.speed * delta_time )
 
+        
         if self.location.x > window.Window.size[0]:
-            self.location.x = -1
-        if self.location.x < -1:
+            self.location.x = 0
+            
+        if self.location.x < 0:
             self.location.x = window.Window.size[0]
+            
         if self.location.y > window.Window.size[1]:
-            self.location.y = -1
-        if self.location.y < -1:
+            self.location.y = 0
+            
+        if self.location.y < 0:
             self.location.y = window.Window.size[1]
         
 

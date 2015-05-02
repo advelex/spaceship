@@ -16,6 +16,8 @@ class AnimationComponent( object ):
         
         AnimationComponent.animation_component_list.append( self )
         
+        self.rotated_image = None
+        
         
     def SetColorKey( self, color = None ):
     
@@ -41,22 +43,17 @@ class AnimationComponent( object ):
         h = 30
         
         location_rect = self.physics_component.GetLocationRect()
-        window.blit( self.image, location_rect )
+        window.blit( self.rotated_image, location_rect )
         
 
     def RotateCenter( self, angle ):
-    
-        """rotate an image while keeping its center and size"""
-        orig_rect = self.physics_component.GetLocationRect()
         
+        orig_rect = self.image.get_rect()
         rot_image = pygame.transform.rotate( self.image, angle )
         rot_rect = orig_rect.copy()
         rot_rect.center = rot_image.get_rect().center
-        rot_image = rot_image.subsurface(rot_rect).copy()
+        self.rotated_image = rot_image.subsurface( rot_rect ).copy()
         
-        self.image = rot_image
-
-
 
 
 

@@ -36,7 +36,6 @@ class EventManager( object ):
                     if self.key_up:
                         pass
                     else:
-                        
                         self.physics_component.acceleration.y -= self.physics_component.acceleration_factor
                         self.key_up = True
                         
@@ -98,7 +97,7 @@ class EventManager( object ):
 class Player():
 
     
-    def __init__( self, acceleration ):
+    def __init__( self, acceleration_factor ):
     
         super().__init__()
         
@@ -116,14 +115,12 @@ class Player():
             
         start_pos = Vector2( 150, 150 )
         
-        self.physics_component = PhysicsComponent( start_pos, acceleration )
+        self.physics_component = PhysicsComponent( start_pos, acceleration_factor )
         
         image_path = m_img_path
         self.graphics = animations.AnimationComponent( image_path, self.physics_component )
         
         self.physics_component.SetGraphicsComponent( self.graphics )
-
-        self.last_time = time.perf_counter()
         
         self.event_manager = EventManager( self.physics_component )
 
@@ -149,6 +146,7 @@ class Gui:
         
 
     def HandleInput(self):
+    
         return self.ship.event_manager.CheckInput()
 
 
@@ -162,7 +160,7 @@ class Gui:
             
             self.window.RenderAll()
             
-            #self.clock.tick(self.fps)
+            #self.clock.tick( self.fps )
 
         pygame.quit()
 

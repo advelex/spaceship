@@ -25,7 +25,7 @@ class Vector2(object):
         def UpdateCartesian(self):
 
                 self.x = self.r * cos(radians(self.fii))
-                self.y = self.r * sin(radians(self.fii))
+                self.y = -self.r * sin(radians(self.fii))
 
         def Magnitude(self):
                 return hypot(self.x, self.y)

@@ -4,34 +4,27 @@ import pdb
 import time
 import os, pathlib
 
+import window
+import animations
+
+from physics import PhysicsComponent
+
 #Tällä saadaan tietää mikä käyttöjärjestelmä on tällä hetkellä.
 from sys import platform as _platform
 
 from vector2 import Vector2
 
-'''
-Aiemmin Gui luokalla oli metodi: event_manager. Luokka EventManager vastaa sitä,
-sillä erotuksella, että uusi luokka kykenee muistamaan mitkä näppäimet ovat 
-painettuina ja mitkä ei.
 
-Aiemmassa event_manager metodissa playerin kiihtyvyyttä säädettiin suoraan,
-kun tiettyä näppäinta oli painettu. Uusi EventManager pitää erikseen kirjaa
-kaikista (halutuista) näppäimista, mikä selittaa uudet if-else kohdat.
-'''
 class EventManager( object ):
-    
-    '''
-    Initti ottaa parametrin player, jotta se voisi muuttaa tämän kiihtyvyyttä.
-    '''
-    def __init__( self, player ):
+
+    def __init__( self, physics_component ):
     
         self.key_up = False
         self.key_down = False
         self.key_left = False
         self.key_right = False
         
-        self.player = player
-        
+        self.physics_component = physics_component
     
     def CheckInput( self ):
         for event in pygame.event.get():
@@ -43,28 +36,29 @@ class EventManager( object ):
                     if self.key_up:
                         pass
                     else:
-                        self.player.a.y -= self.player.acceleration
+                        
+                        self.physics_component.acceleration.y -= self.physics_component.acceleration_factor
                         self.key_up = True
                         
                 if event.key == pygame.K_DOWN:
                     if self.key_down:
                         pass
                     else:
-                        self.player.a.y += self.player.acceleration
+                        self.physics_component.acceleration.y += self.physics_component.acceleration_factor
                         self.key_down = True
                         
                 if event.key == pygame.K_LEFT:
                     if self.key_left:
                         pass
                     else:
-                        self.player.a.x -= self.player.acceleration
+                        self.physics_component.acceleration.x -= self.physics_component.acceleration_factor
                         self.key_left = True
                     
                 if event.key == pygame.K_RIGHT:
                     if self.key_right:
                         pass
                     else:
-                        self.player.a.x += self.player.acceleration
+                        self.physics_component.acceleration.x += self.physics_component.acceleration_factor
                         self.key_right = True
 
                 if event.key == pygame.K_q:
@@ -73,63 +67,41 @@ class EventManager( object ):
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     if self.key_up:
-                        self.player.a.y += self.player.acceleration
+                        self.physics_component.acceleration.y += self.physics_component.acceleration_factor
                         self.key_up = False
                     else:
                         pass
                         
                 if event.key == pygame.K_DOWN:
                     if self.key_down:
-                        self.player.a.y -= self.player.acceleration
+                        self.physics_component.acceleration.y -= self.physics_component.acceleration_factor
                         self.key_down = False
                     else:
                         pass
                         
                 if event.key == pygame.K_LEFT:
                     if self.key_left:
-                        self.player.a.x += self.player.acceleration
+                        self.physics_component.acceleration.x += self.physics_component.acceleration_factor
                         self.key_left = False
                     else:
                         pass
                         
                 if event.key == pygame.K_RIGHT:
                     if self.key_right:
-                        self.player.a.x -= self.player.acceleration
+                        self.physics_component.acceleration.x -= self.physics_component.acceleration_factor
                         self.key_right = False
                     else:
                         pass
         return True
 
 
-'''
-class Vector:
+class Player():
 
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def get_angle(self):
-        return math.degrees(math.atan2(self.x, self.y))
-'''
-
-
-class Player(pygame.sprite.Sprite):
     
-    '''
-    Playerin initti ottaa parametrin acceleration, jota vastasi aiemman toteutuksen Gui.a, 
-    mikä oli 0.1
-    
-    Täällä myös luodaan playerille oma EventManager instanssi, joka vastaa aiempaa
-    Gui luokan event_manager metodia.
-    '''
     def __init__( self, acceleration ):
+    
         super().__init__()
         
-        '''
-        TODO::
-        Tähän voisi tehdä if-else kohdan, mikä hakis oikean polun riippuen siitä, 
-        että mikä käyttöjärjestelmä on.
-        '''
         m_img_path = ""
         s_img_path = ""
         
@@ -140,92 +112,38 @@ class Player(pygame.sprite.Sprite):
             current_path = os.path.dirname( __file__ )
             m_img_path = current_path + '\ship_m.png'
             s_img_path = current_path + '\ship_s.png'
+            
+            
+        start_pos = Vector2( 150, 150 )
         
-        self.image_original_m = pygame.image.load( m_img_path ).convert()
-        self.image_original_m.set_colorkey(Gui.BLACK)
-        self.image_original_s = pygame.image.load( s_img_path ).convert()
-        self.image_original_s.set_colorkey(Gui.BLACK)
-        self.image = self.image_original_s
-        self.rect = self.image.get_rect()
-
-        self.rect.x = 400
-        self.rect.y = 300
-        self.v = Vector2(0, 0)
-        self.a = Vector2(0, 0)
+        self.physics_component = PhysicsComponent( start_pos, acceleration )
         
-        self.acceleration = acceleration
+        image_path = m_img_path
+        self.graphics = animations.AnimationComponent( image_path, self.physics_component )
+        
+        self.physics_component.SetGraphicsComponent( self.graphics )
 
         self.last_time = time.perf_counter()
         
-        self.event_manager = EventManager( self )
-
-
-    def rot_center(self, image, angle):
-        """rotate an image while keeping its center and size"""
-        orig_rect = image.get_rect()
-        rot_image = pygame.transform.rotate(image, angle)
-        rot_rect = orig_rect.copy()
-        rot_rect.center = rot_image.get_rect().center
-        rot_image = rot_image.subsurface(rot_rect).copy()
-        return rot_image
-        
-
-    def update(self):
-        if self.a.x != 0 or self.a.y != 0:
-            #self.image = self.rot_center(self.image_original_m, self.v.get_angle()+180)
-            self.image = self.rot_center( self.image_original_m, self.v.GetAngle()+180 )
-        else:
-            #self.image = self.rot_center(self.image_original_s, self.v.get_angle()+180)
-            self.image = self.rot_center( self.image_original_s, self.v.GetAngle()+180 )
-
-        current_time = time.perf_counter()
-        delta_time = (current_time-self.last_time) * 100
-        self.last_time = current_time
-        
-        self.v = self.v + self.a * delta_time
-        '''
-        self.v.x += self.a.x*delta_time
-        self.v.y += self.a.y*delta_time
-        '''
-        self.rect.x += self.v.x*delta_time
-        self.rect.y += self.v.y*delta_time
-
-        if self.rect.x > Gui.WINDOW_SIZE[0]:
-            self.rect.x = -1
-        if self.rect.x < -1:
-            self.rect.x = Gui.WINDOW_SIZE[0]
-        if self.rect.y > Gui.WINDOW_SIZE[1]:
-            self.rect.y = -1
-        if self.rect.y < -1:
-            self.rect.y = Gui.WINDOW_SIZE[1]
+        self.event_manager = EventManager( self.physics_component )
 
 
 
 class Gui:
 
-    WINDOW_SIZE = [800, 600]
 
-    # Colors
-    BLACK = (0, 0 ,0)
-    WHITE = (255, 255, 255)
-    RED = (255, 0 ,0)
-    
-    '''
-    Aiemmin täällä oli muuttuja self.ai, nyt se on korvattu acceleration
-    nimisellä muuttujalla, joka annetaan playerille parametrinä.
-    '''
     def __init__(self):
 
         pygame.init()
-        self.screen = pygame.display.set_mode(self.WINDOW_SIZE)
-        pygame.display.set_caption('Spaceship Simulation')
+                
+        self.window_size = [ 1000, 750 ]
+        self.window = window.Window( self.window_size )
 
-        acceleration = 0.1
-        self.ship = Player( acceleration )
+        acceleration_factor = 1.0
+        self.ship = Player( acceleration_factor )
         
         self.fps = 60
-        self.all_sprites = pygame.sprite.Group()
-        self.all_sprites.add(self.ship)
+        
         self.clock = pygame.time.Clock()
         self.gui_running = True
         
@@ -234,33 +152,28 @@ class Gui:
         return self.ship.event_manager.CheckInput()
 
 
-    def update_logic(self):
-        self.ship.update()
-        
-
-    def update_grafics(self):
-        self.screen.fill(self.BLACK)
-        self.all_sprites.draw(self.screen)
-        pygame.display.flip()
-
-
     def loop(self):
 
         while self.gui_running:
             
             self.gui_running = self.HandleInput()
-            self.update_logic()
-            self.update_grafics()
-            self.clock.tick(self.fps)
+            
+            self.ship.physics_component.Update( 1.0 / self.fps )
+            
+            self.window.RenderAll()
+            
+            #self.clock.tick(self.fps)
 
         pygame.quit()
 
 
 
 def main():
+
     # pdb.set_trace()
     game = Gui()
     game.loop()
+    
 
 if __name__ == '__main__':
     main()

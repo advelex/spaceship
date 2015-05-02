@@ -24,12 +24,12 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="23.583333"
-     inkscape:cx="16.264033"
-     inkscape:cy="12.901191"
+     inkscape:zoom="21.763916"
+     inkscape:cx="14.221981"
+     inkscape:cy="11.287206"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
-     showgrid="false"
+     inkscape:current-layer="layer3"
+     showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
      inkscape:window-x="0"
@@ -55,6 +55,18 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="bg">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:#fffb00;stroke-width:0;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2987"
+       width="30"
+       height="30"
+       x="0"
+       y="0" />
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"

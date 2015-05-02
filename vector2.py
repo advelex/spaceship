@@ -1,21 +1,40 @@
  
-from math import ( hypot, degrees, atan2 )
+from math import ( hypot, degrees, atan2, cos, sin, radians )
 
 
-'''
-Vector2 class
-'''
 class Vector2( object ):
+        '''
+        Vector2 class
+        '''
 
         def __init__( self, x = None, y = None ):
                 
                 self.x = x
                 self.y = y
+                self.r = self.GetR()
+                self.fii = self.GetAngle()
                 
                 
         def GetAngle( self ):
         
                 return degrees( atan2( self.x, self.y ) )
+                
+
+        def GetR( self ):
+        
+                return hypot( self.x, self.y )
+                
+
+        def UpdatePolar( self ):
+        
+                self.r = self.GetR()
+                self.fii = self.GetAngle()
+                
+
+        def UpdateCartesian( self ):
+        
+                self.x = self.r * cos( radians( self.fii ) )
+                self.y = self.r * sin( radians( self.fii ) )
 
 
         def Magnitude( self ):
@@ -106,6 +125,18 @@ class Vector2( object ):
                         
                 except TypeError:
                         raise TypeError
+                        
+
+def main():
+        v = Vector2( 0, 0 )
+        v.GetAngle()
+        v.GetR()
+        v.UpdatePolar()
+        v.UpdateCartesian()
+        
+        
+if ( __name__ == '__main__' ):
+        main()
                         
                         
                         

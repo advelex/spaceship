@@ -29,8 +29,10 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.x = 400
         self.rect.y = 300
-        self.v = Vector(0, 0)
-        self.a = Vector(0, 0)
+        self.s = pygame.math.Vector2(self.rect.x, self.rect.y)
+        self.v = pygame.math.Vector2(0, 0)
+        self.a = pygame.math.Vector2(0, 0)
+        self.up = pygame.math.Vector2(0, -1)        # Direction vector
 
         self.last_time = time.perf_counter()
 
@@ -46,28 +48,29 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         if self.a.x != 0 or self.a.y != 0:
-            self.image = self.rot_center(self.image_original_m, self.v.get_angle()+180)
+            self.image = self.rot_center(self.image_original_m, self.v.angle_to(self.up))
         else:
-            self.image = self.rot_center(self.image_original_s, self.v.get_angle()+180)
+            self.image = self.rot_center(self.image_original_s, self.v.angle_to(self.up))
 
         current_time = time.perf_counter()
         delta_time = (current_time-self.last_time) * 100
         self.last_time = current_time
         
 
-        self.v.x += self.a.x*delta_time
-        self.v.y += self.a.y*delta_time
-        self.rect.x += self.v.x*delta_time
-        self.rect.y += self.v.y*delta_time
+        self.v += self.a*delta_time
+        self.s += self.v*delta_time
 
-        if self.rect.x > Gui.WINDOW_SIZE[0]:
-            self.rect.x = -1
-        if self.rect.x < -1:
-            self.rect.x = Gui.WINDOW_SIZE[0]
-        if self.rect.y > Gui.WINDOW_SIZE[1]:
-            self.rect.y = -1
-        if self.rect.y < -1:
-            self.rect.y = Gui.WINDOW_SIZE[1]
+        if self.s.x > Gui.WINDOW_SIZE[0]:
+            self.s.x = -1
+        if self.s.x < -1:
+            self.s.x = Gui.WINDOW_SIZE[0]
+        if self.s.y > Gui.WINDOW_SIZE[1]:
+            self.s.y = -1
+        if self.s.y < -1:
+            self.s.y = Gui.WINDOW_SIZE[1]
+
+        self.rect.x = self.s.x
+        self.rect.y = self.s.y
 
 
 
@@ -78,7 +81,8 @@ class Gui:
     # Colors
     BLACK = (0, 0 ,0)
     WHITE = (255, 255, 255)
-    RED = (255, 0 ,0)
+    RED   = (255, 0 ,0)
+
     
     def __init__(self):
 
@@ -94,6 +98,13 @@ class Gui:
         self.clock = pygame.time.Clock()
         self.gui_running = True
 
+        # acceleration vectors
+        self.up    = pygame.math.Vector2(0, -self.a)
+        self.down  = pygame.math.Vector2(0, self.a)
+        self.left  = pygame.math.Vector2(-self.a, 0)
+        self.right = pygame.math.Vector2(self.a, 0)
+        self.zero  = pygame.math.Vector2(0, 0)
+
     def event_manager(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -101,26 +112,26 @@ class Gui:
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    self.ship.a.y = -self.a
+                    self.ship.a = self.up
                 if event.key == pygame.K_DOWN:
-                    self.ship.a.y = self.a
+                    self.ship.a = self.down
                 if event.key == pygame.K_LEFT:
-                    self.ship.a.x = -self.a
+                    self.ship.a = self.left
                 if event.key == pygame.K_RIGHT:
-                    self.ship.a.x = self.a
+                    self.ship.a = self.right
 
                 if event.key == pygame.K_q:
                     return False
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
-                    self.ship.a.y = 0
+                    self.ship.a = self.zero
                 if event.key == pygame.K_DOWN:
-                    self.ship.a.y = 0
+                    self.ship.a = self.zero
                 if event.key == pygame.K_LEFT:
-                    self.ship.a.x = 0
+                    self.ship.a = self.zero
                 if event.key == pygame.K_RIGHT:
-                    self.ship.a.x = 0
+                    self.ship.a = self.zero
         return True
 
     def update_logic(self):

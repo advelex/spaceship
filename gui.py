@@ -99,7 +99,7 @@ class Player(pygame.sprite.Sprite):
 
 class Gui(object):
 
-    WINDOW_SIZE = [800, 600]
+    WINDOW_SIZE = [1600, 900]
 
     # Colors
     BLACK = (0, 0, 0)

@@ -67,6 +67,7 @@ class PhysicsComponent():
         # there's EventManager. PhysicsComponent should not know anything
         # about motors being on or off. These should be changed from
         # EventManager (future implement).
+        
         if self.acceleration.IsZero():
             if self.motors_on is True:
                 self.graphics_component.ChangeImageTo( "motors_off" )

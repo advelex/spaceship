@@ -20,20 +20,24 @@ class Player( object ):
         image_motors_off_path = ""
         
         if sys.platform == "linux" or sys.platform == "linux2":
-            image_motors_on_path = str( pathlib.Path('ship_motors_on.png').resolve() )
-            image_motors_off_path = str( pathlib.Path('ship_motors_off.png').resolve() )
+            image_motors_on_path_1 = str( pathlib.Path('ship_motors_on_1.png').resolve() )
+            image_motors_on_path_2 = str( pathlib.Path('ship_motors_on_2.png').resolve() )
+            image_motors_on_path_3 = str( pathlib.Path('ship_motors_on_3.png').resolve() )
         else:
             current_path = os.path.dirname( __file__ )
-            image_motors_on_path = current_path + '\ship_motors_on.png'
-            image_motors_off_path = current_path + '\ship_motors_off.png'
+            image_motors_on_path_1 = current_path + '\ship_motors_on_1.png'
+            image_motors_on_path_2 = current_path + '\ship_motors_on_2.png'
+            image_motors_on_path_3 = current_path + '\ship_motors_on_3.png'
             
             
         start_pos = Vector2( 150, 150 )
         self.physics_component = PhysicsComponent( start_pos, acceleration_factor, max_speed )
         
-        image_list = [ image_motors_on_path, image_motors_off_path ]
-        image_description_list = [ "motors_on", "motors_off" ]
-        self.graphics_component = GraphicsComponent( image_list, image_description_list )
+        image_path_list = [ image_motors_on_path_1, image_motors_on_path_2, image_motors_on_path_3 ]
+        image_description = "motors on"
+        
+        self.graphics_component = GraphicsComponent( image_path_list, image_description )
+        
         
         self.graphics_component.SetPhysicsComponent( self.physics_component )
         self.physics_component.SetGraphicsComponent( self.graphics_component )

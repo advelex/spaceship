@@ -13,6 +13,8 @@ from vector2 import Vector2
 
 
 class PhysicsComponent():
+            
+    friction_mult = 0.9995
     
     def __init__( self, location_vector, acceleration_factor = 1.0, max_velocity = 14.0 ):
     
@@ -55,7 +57,7 @@ class PhysicsComponent():
         # else:
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
         
-        speed = self.speed + ( self.acceleration * delta_time )
+        speed = self.speed * PhysicsComponent.friction_mult + ( self.acceleration * delta_time )
         self.speed = speed.ClampMagnitude( self.max_velocity )
         
         self.location = self.location + ( self.speed * delta_time )
@@ -77,20 +79,15 @@ class PhysicsComponent():
             self.location.y = window.Window.size[1]
         
 
-
-
 def main():
-    pass
+    import gui
+    
+    game = gui.Gui()
+    game.loop()
+
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
 
 
 

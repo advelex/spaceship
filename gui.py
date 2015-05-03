@@ -4,7 +4,7 @@ import pathlib
 import sys
 
 from window import Window
-from animations import AnimationComponent
+from graphics import GraphicsComponent
 from physics import PhysicsComponent
 from input_manager import InputManager
 from vector2 import Vector2
@@ -16,26 +16,27 @@ class Player( object ):
     
         super().__init__()
         
-        m_img_path = ""
-        s_img_path = ""
+        image_motors_on_path = ""
+        image_motors_off_path = ""
         
         if sys.platform == "linux" or sys.platform == "linux2":
-            m_img_path = str( pathlib.Path('ship_m.png').resolve() )
-            s_img_path = str( pathlib.Path('ship_s.png').resolve() )
+            image_motors_on_path = str( pathlib.Path('ship_motors_on.png').resolve() )
+            image_motors_off_path = str( pathlib.Path('ship_motors_off.png').resolve() )
         else:
             current_path = os.path.dirname( __file__ )
-            m_img_path = current_path + '\ship_m.png'
-            s_img_path = current_path + '\ship_s.png'
+            image_motors_on_path = current_path + '\ship_motors_on.png'
+            image_motors_off_path = current_path + '\ship_motors_off.png'
             
             
         start_pos = Vector2( 150, 150 )
-        
         self.physics_component = PhysicsComponent( start_pos, acceleration_factor, max_speed )
         
-        image_path = m_img_path
-        self.graphics = AnimationComponent( image_path, self.physics_component )
+        image_list = [ image_motors_on_path, image_motors_off_path ]
+        image_description_list = [ "motors_on", "motors_off" ]
+        self.graphics_component = GraphicsComponent( image_list, image_description_list )
         
-        self.physics_component.SetGraphicsComponent( self.graphics )
+        self.graphics_component.SetPhysicsComponent( self.physics_component )
+        self.physics_component.SetGraphicsComponent( self.graphics_component )
         
         self.input_manager = InputManager( self.physics_component )
 
@@ -46,11 +47,11 @@ class Gui( object ):
 
         pygame.init()
                 
-        self.window_size = [ 1000, 750 ]
+        self.window_size = [ 1750, 900 ]
         self.window = Window( self.window_size )
 
-        acceleration_factor = 2.5
-        max_speed = 8
+        acceleration_factor = 10.0
+        max_speed = 50.0
         self.ship = Player( acceleration_factor, max_speed )
         
         self.fps = 60

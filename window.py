@@ -2,7 +2,7 @@
 #import sys, time, pygame
 import pygame
 
-from animations import AnimationComponent
+from graphics import GraphicsComponent
 
 
 class Window( object ):
@@ -29,7 +29,7 @@ class Window( object ):
         
                 self.window.fill( self.black )
                 
-                AnimationComponent.ListRender( self.window )
+                GraphicsComponent.ListRender( self.window )
                         
                 pygame.display.flip()
         

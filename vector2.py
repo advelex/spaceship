@@ -14,6 +14,11 @@ class Vector2( object ):
         self.r = self.GetR()
         self.fii = self.GetAngle()
             
+
+    def IsZero( self ):
+
+        return ( ( self.x == 0 ) and ( self.y == 0 ) )
+            
             
     def GetAngle( self ):
 

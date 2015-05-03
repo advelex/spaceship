@@ -14,7 +14,7 @@ from vector2 import Vector2
 
 class PhysicsComponent():
     
-    def __init__( self, location_vector, acceleration_factor = 1.0 ):
+    def __init__( self, location_vector, acceleration_factor = 1.0, max_velocity = 14.0 ):
     
         self.graphics_component = None
         
@@ -24,6 +24,7 @@ class PhysicsComponent():
         self.acceleration = Vector2(0, 0)
         
         self.acceleration_factor = acceleration_factor
+        self.max_velocity = max_velocity
         
         
     def SetGraphicsComponent( self, graphics_component ):
@@ -54,10 +55,8 @@ class PhysicsComponent():
         # else:
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
         
-        max_velocity = 14.0
-        
         speed = self.speed + ( self.acceleration * delta_time )
-        self.speed = speed.ClampMagnitude( max_velocity )
+        self.speed = speed.ClampMagnitude( self.max_velocity )
         
         self.location = self.location + ( self.speed * delta_time )
             

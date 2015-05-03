@@ -46,11 +46,11 @@ class Gui( object ):
 
         pygame.init()
                 
-        self.window_size = [ 1000, 750 ]
+        self.window_size = [ 1800, 950 ]
         self.window = Window( self.window_size )
 
-        acceleration_factor = 2.5
-        max_speed = 8
+        acceleration_factor = 7.5
+        max_speed = 24.0
         self.ship = Player( acceleration_factor, max_speed )
         
         self.fps = 60

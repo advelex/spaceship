@@ -56,6 +56,7 @@ class PhysicsComponent():
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
         # else:
             # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
+            
         
         speed = self.speed * PhysicsComponent.friction_mult + ( self.acceleration * delta_time )
         self.speed = speed.ClampMagnitude( self.max_velocity )

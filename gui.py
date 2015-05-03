@@ -16,26 +16,27 @@ class Player( object ):
     
         super().__init__()
         
-        m_img_path = ""
-        s_img_path = ""
+        image_motors_on_path = ""
+        image_motors_off_path = ""
         
         if sys.platform == "linux" or sys.platform == "linux2":
-            m_img_path = str( pathlib.Path('ship_m.png').resolve() )
-            s_img_path = str( pathlib.Path('ship_s.png').resolve() )
+            image_motors_on_path = str( pathlib.Path('ship_motors_on.png').resolve() )
+            image_motors_off_path = str( pathlib.Path('ship_motors_off.png').resolve() )
         else:
             current_path = os.path.dirname( __file__ )
-            m_img_path = current_path + '\ship_m.png'
-            s_img_path = current_path + '\ship_s.png'
+            image_motors_on_path = current_path + '\ship_motors_on.png'
+            image_motors_off_path = current_path + '\ship_motors_off.png'
             
             
         start_pos = Vector2( 150, 150 )
-        
         self.physics_component = PhysicsComponent( start_pos, acceleration_factor, max_speed )
         
-        image_path = m_img_path
-        self.graphics = AnimationComponent( image_path, self.physics_component )
+        image_list = [ image_motors_on_path, image_motors_off_path ]
+        image_description_list = [ "motors_on", "motors_off" ]
+        self.graphics_component = AnimationComponent( image_list, image_description_list )
         
-        self.physics_component.SetGraphicsComponent( self.graphics )
+        self.graphics_component.SetPhysicsComponent( self.physics_component )
+        self.physics_component.SetGraphicsComponent( self.graphics_component )
         
         self.input_manager = InputManager( self.physics_component )
 

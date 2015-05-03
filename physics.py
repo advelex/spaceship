@@ -28,6 +28,8 @@ class PhysicsComponent():
         self.acceleration_factor = acceleration_factor
         self.max_velocity = max_velocity
         
+        self.motors_on = False
+        
         
     def SetGraphicsComponent( self, graphics_component ):
     
@@ -51,17 +53,28 @@ class PhysicsComponent():
         
 
     def Update( self, delta_time ):
-    
-        # if self.acceleration.x != 0 or self.acceleration.y != 0:
-            # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
-        # else:
-            # self.graphics_component.RotateCenter( self.speed.GetAngle()+180 )
-            
         
         speed = self.speed * PhysicsComponent.friction_mult + ( self.acceleration * delta_time )
         self.speed = speed.ClampMagnitude( self.max_velocity )
         
         self.location = self.location + ( self.speed * delta_time )
+        
+        # HACK::
+        # TODO::
+        # README::
+        # FIXME::
+        # ChangeImageTo() should be in InputManager module untill
+        # there's EventManager. PhysicsComponent should not know anything
+        # about motors being on or off. These should be changed from
+        # EventManager (future implement).
+        if self.acceleration.IsZero():
+            if self.motors_on is True:
+                self.graphics_component.ChangeImageTo( "motors_off" )
+                self.motors_on = False
+        else:
+            if self.motors_on is False:
+                self.graphics_component.ChangeImageTo( "motors_on" )
+                self.motors_on = True
             
         angle = self.speed.GetAngle() + 180
         self.graphics_component.RotateCenter( angle )

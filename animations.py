@@ -1,8 +1,6 @@
-
 import pygame
 
 
-# TODO:: PhysicsComponent
 class AnimationComponent( object ):
         
     animation_component_list = []

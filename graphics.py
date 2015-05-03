@@ -6,15 +6,21 @@ class GraphicsComponent( object ):
     animation_component_list = []
     
         
-    def __init__( self, image_path_list, description ):
+    def __init__( self ):
     
-        self.animation = Animation( image_path_list, description )
+        self.animations = []
+        self.current_animation_index = 0
         
         GraphicsComponent.animation_component_list.append( self )
         
         self.rotated_image = None
         
         
+    def AddAnimation( self , image_path_list, description ):
+    
+        animation = Animation( image_path_list, description )
+        self.animations.append( animation )
+    
     
     def SetPhysicsComponent( self, physics_component ):
     
@@ -31,14 +37,18 @@ class GraphicsComponent( object ):
         #self.image.set_colorkey( color )
         
     
-    def ChangeImageTo( self, image_description ):
+    def ChangeImageTo( self, animation_description ):
         
-        # FIXME
-        return
+        list_size = len( self.animations )
         
-        for i in range( self.image_list_size ):
-            if ( self.image_description_list[ i ] == image_description ):
-                self.current_image_index = i
+        for i in range( list_size ):
+            description = self.animations[ i ].GetDescription()
+            
+            if ( description == animation_description ):
+                self.current_animation_index = i
+                return
+        
+        raise Exception( "Animation with the right description wasn't found." )
         
 
     def ListRender( window ):
@@ -54,13 +64,15 @@ class GraphicsComponent( object ):
     def Render( self, window ):
     
         location_rect = self.physics_component.GetLocationRect()
-        # FIXME
-        self.animation.Render( location_rect, window )
+        
+        current_animation = self.animations[ self.current_animation_index ]
+        
+        current_animation.Render( location_rect, window )
         
 
     def RotateCenter( self, angle ):
     
-        self.animation.RotateCenter( angle )
+        self.animations[ self.current_animation_index ].RotateCenter( angle )
         
 
 class Animation( object ):
@@ -83,6 +95,10 @@ class Animation( object ):
             self.image_list.append( img )
         
         self.max_index = i
+        
+    def GetDescription( self ):
+    
+        return self.description
         
     
     def Render( self, location_rect, window ):

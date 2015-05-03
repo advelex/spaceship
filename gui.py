@@ -10,39 +10,53 @@ from input_manager import InputManager
 from vector2 import Vector2
 
 
+def StringToDirectory( string_to_dir ):
+
+    if sys.platform == "linux" or sys.platform == "linux2":
+        return str( pathlib.Path( string_to_dir ).resolve() )
+        
+    else:
+        current_path = os.path.dirname( __file__ )
+        return current_path + string_to_dir
+
+
 class Player( object ):
     
     def __init__( self, acceleration_factor = None, max_speed = None ):
     
         super().__init__()
         
-        image_motors_on_path = ""
-        image_motors_off_path = ""
         
-        if sys.platform == "linux" or sys.platform == "linux2":
-            image_motors_on_path_1 = str( pathlib.Path('ship_motors_on_1.png').resolve() )
-            image_motors_on_path_2 = str( pathlib.Path('ship_motors_on_2.png').resolve() )
-            image_motors_on_path_3 = str( pathlib.Path('ship_motors_on_3.png').resolve() )
-        else:
-            current_path = os.path.dirname( __file__ )
-            image_motors_on_path_1 = current_path + '\ship_motors_on_1.png'
-            image_motors_on_path_2 = current_path + '\ship_motors_on_2.png'
-            image_motors_on_path_3 = current_path + '\ship_motors_on_3.png'
-            
-            
         start_pos = Vector2( 150, 150 )
         self.physics_component = PhysicsComponent( start_pos, acceleration_factor, max_speed )
         
-        image_path_list = [ image_motors_on_path_1, image_motors_on_path_2, image_motors_on_path_3 ]
-        image_description = "motors on"
-        
-        self.graphics_component = GraphicsComponent( image_path_list, image_description )
-        
+        self.graphics_component = GraphicsComponent()
         
         self.graphics_component.SetPhysicsComponent( self.physics_component )
         self.physics_component.SetGraphicsComponent( self.graphics_component )
         
+        
         self.input_manager = InputManager( self.physics_component )
+        
+            
+        image_list_motors_off = []
+        
+        image_list_motors_off.append( StringToDirectory( "\ship_motors_off.png" ) )
+        
+        image_description_motors_off = "motors_off"
+        
+        self.graphics_component.AddAnimation( image_list_motors_off, image_description_motors_off )
+        
+        
+        image_list_motors_on = []
+        
+        for i in range( 3 ):
+            path_name = "\ship_motors_on_" + str( i ) + ".png"
+            image_list_motors_on.append( StringToDirectory( path_name ) )
+            
+        image_description_motors_on = "motors_on"
+        
+        self.graphics_component.AddAnimation( image_list_motors_on, image_description_motors_on )
 
 
 class Gui( object ):

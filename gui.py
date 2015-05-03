@@ -1,23 +1,11 @@
 import pygame
-import os
-import pathlib
-import sys
 
 from window import Window
 from graphics import GraphicsComponent
 from physics import PhysicsComponent
 from input_manager import InputManager
 from vector2 import Vector2
-
-
-def StringToDirectory( string_to_dir ):
-
-    if sys.platform == "linux" or sys.platform == "linux2":
-        return str( pathlib.Path( string_to_dir ).resolve() )
-        
-    else:
-        current_path = os.path.dirname( __file__ )
-        return current_path + string_to_dir
+from string_to_directory import StringToDirectory
 
 
 class Player( object ):
@@ -41,7 +29,7 @@ class Player( object ):
             
         image_list_motors_off = []
         
-        image_list_motors_off.append( StringToDirectory( "\ship_motors_off.png" ) )
+        image_list_motors_off.append( StringToDirectory.Get( "ship_motors_off.png" ) )
         
         image_description_motors_off = "motors_off"
         
@@ -51,8 +39,8 @@ class Player( object ):
         image_list_motors_on = []
         
         for i in range( 3 ):
-            path_name = "\ship_motors_on_" + str( i ) + ".png"
-            image_list_motors_on.append( StringToDirectory( path_name ) )
+            path_name = "ship_motors_on_" + str( i ) + ".png"
+            image_list_motors_on.append( StringToDirectory.Get( path_name ) )
             
         image_description_motors_on = "motors_on"
         

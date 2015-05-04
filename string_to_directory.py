@@ -24,15 +24,19 @@ class StringToDirectory( object ):
             
             StringToDirectory.is_set = True
             
+        string_to_return = ""
+        
         if StringToDirectory.current_os == StringToDirectory.LINUX:
-            print( str( pathlib.Path( string_to_dir ).resolve() ) )
-            return str( pathlib.Path( string_to_dir ).resolve() )
+            string_to_return = str( pathlib.Path( string_to_dir ).resolve() )
             
         elif StringToDirectory.current_os == StringToDirectory.OTHER:
-            print( os.path.dirname( __file__ ) + "/" + string_to_dir )
-            return os.path.dirname( __file__ ) + "/" + string_to_dir
+            string_to_return = os.path.dirname( __file__ ) + "/" + string_to_dir
+            
         else:
             raise Exception( "os:{} is unrecognized." .format( StringToDirectory.current_os ) )
+            
+        print( string_to_return )
+        return string_to_return
 
 
 

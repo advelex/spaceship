@@ -1,6 +1,5 @@
 import pygame
 import os
-import pathlib
 import sys
 
 from window import Window
@@ -18,15 +17,15 @@ class Player( object ):
         
         image_motors_on_path = ""
         image_motors_off_path = ""
-        
+        current_path = os.path.dirname( __file__ )
+
         if sys.platform == "linux" or sys.platform == "linux2":
-            image_motors_on_path = str( pathlib.Path('ship_motors_on.png').resolve() )
-            image_motors_off_path = str( pathlib.Path('ship_motors_off.png').resolve() )
+            directory_separator = '/'
         else:
-            current_path = os.path.dirname( __file__ )
-            image_motors_on_path = current_path + '\ship_motors_on.png'
-            image_motors_off_path = current_path + '\ship_motors_off.png'
+            directory_separator = '\\'
             
+        image_motors_on_path = current_path + directory_separator + 'ship_motors_on.png'
+        image_motors_off_path = current_path + directory_separator + 'ship_motors_off.png'
             
         start_pos = Vector2( 150, 150 )
         self.physics_component = PhysicsComponent( start_pos, acceleration_factor, max_speed )
